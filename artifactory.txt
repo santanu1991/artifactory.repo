@@ -1,0 +1,61 @@
+wget https://bintray.com/jfrog/artifactory-rpms/rpm -O bintray-jfrog-artifactory-rpms.rep
+mv bintray-jfrog-artifactory-rpms.repo /etc/yum.repos.d/
+yum install jfrog-artifactory-oss
+ystemctl start artifactory
+systemctl status artifactory
+firewall-cmd --add-port=8081/tcp
+http://192.168.122.x:8081/
+	username: admin
+	password: password
+	next----->next---> maven---> finish
+create a new artifactory
+-------------------------
+	goto addmin----> local--->type--->name--->save
+	check the artifactys:
+	-------------------
+
+	goto artifacts---->name--->exapnd
+go to jenkins:
+----------------
+1> enable Artifactory plugin
+2> configure system
+	add details of artifactory
+
+pipeline{
+    agent {
+     node  'slave1'
+    }
+    stages{
+        stage('upload the files'){
+            steps{
+                script{
+                    try{
+                        retry(3){
+                            
+                            rtUpload (
+                            serverId: "artifactory-1",
+                            spec:
+                                """{        
+                                "files": [
+                        {
+                             "pattern": "/var/lib/jenkins/login.war",
+                                "target": "cicd1/"
+                               }
+                            ]  
+                   }"""
+                )
+                            
+                        }
+                    }
+                    catch(Exception error){
+                        sh "echo failed"
+                    }
+                }
+            }
+            
+        }
+    }
+}
+
+
+		
