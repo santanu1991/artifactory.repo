@@ -31,14 +31,16 @@ pipeline{
                 script{
                     try{
                         retry(3){
-                            
+                            sh """
+			    tar -cvzf santanu_python_project.tar myproject
+			    """
                             rtUpload (
                             serverId: "artifactory-1",
                             spec:
                                 """{        
                                 "files": [
                         {
-                             "pattern": "/var/lib/jenkins/login.war",
+                             "pattern": "santanu_python_project.tar",
                                 "target": "cicd1/"
                                }
                             ]  
